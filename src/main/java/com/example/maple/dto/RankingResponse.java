@@ -4,8 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter @Setter
-public class CharacterRanking {
+public class RankingResponse {
+    private List<CharacterRanking> ranking;
+}
+
+@Getter @Setter
+class CharacterRanking {
 
     private String date;
     private int ranking;
