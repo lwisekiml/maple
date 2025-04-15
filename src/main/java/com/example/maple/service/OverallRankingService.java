@@ -1,7 +1,7 @@
 package com.example.maple.service;
 
 import com.example.maple.configure.MapleProperties;
-import com.example.maple.domain.RankingResponse;
+import com.example.maple.dto.RankingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;

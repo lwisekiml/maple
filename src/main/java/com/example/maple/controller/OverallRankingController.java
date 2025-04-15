@@ -1,6 +1,6 @@
 package com.example.maple.controller;
 
-import com.example.maple.domain.RankingResponse;
+import com.example.maple.dto.RankingResponse;
 import com.example.maple.service.OverallRankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
