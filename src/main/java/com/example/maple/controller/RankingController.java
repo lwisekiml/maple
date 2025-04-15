@@ -1,7 +1,7 @@
 package com.example.maple.controller;
 
 import com.example.maple.dto.RankingResponse;
-import com.example.maple.service.OverallRankingService;
+import com.example.maple.service.RankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/ranking")
 @RequiredArgsConstructor
-public class OverallRankingController {
+public class RankingController {
 
-    private final OverallRankingService overallRankingService;
+    private final RankingService overallRankingService;
 
     @ResponseBody
     @GetMapping("/overall")

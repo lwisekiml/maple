@@ -10,13 +10,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Collections;
 
 @Service
-public class OverallRankingService {
+public class RankingService {
 
     private final WebClient webClient;
 
     @Autowired
-    public OverallRankingService(WebClient.Builder webClientBuilder,
-                                 MapleProperties props
+    public RankingService(WebClient.Builder webClientBuilder,
+                          MapleProperties props
     ) {
         this.webClient = webClientBuilder
                 .baseUrl(props.getRanking())
