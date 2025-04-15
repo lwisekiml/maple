@@ -1,7 +1,7 @@
 package com.example.maple.service;
 
 import com.example.maple.configure.MapleProperties;
-import com.example.maple.dto.RankingResponse;
+import com.example.maple.dto.RankingOverallResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class RankingService {
                 .build();
     }
 
-    public RankingResponse getRankingOverall(String date) {
+    public RankingOverallResponse getRankingOverall(String date) {
         try {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -42,7 +42,7 @@ public class RankingService {
                             clientResponse -> clientResponse.bodyToMono(String.class)
                                     .map(body -> new RuntimeException("서버 오류 (5xx): " + body))
                     )
-                    .bodyToMono(RankingResponse.class)
+                    .bodyToMono(RankingOverallResponse.class)
                     .block();
 
 //            ObjectMapper mapper = new ObjectMapper();
@@ -50,9 +50,9 @@ public class RankingService {
         } catch (Exception e) {
             e.printStackTrace();
 
-            // 항상 RankingResponse 객체를 반환하므로 Controller에서 JSON 변환도 자연스럽게 처리된다.
+            // 항상 RankingOverallResponse 객체를 반환하므로 Controller에서 JSON 변환도 자연스럽게 처리된다.
             // Postman에서 테스트 시에도 항상 일관된 응답 구조를 얻을 수 있다.
-            RankingResponse emptyResponse = new RankingResponse();
+            RankingOverallResponse emptyResponse = new RankingOverallResponse();
             emptyResponse.setRanking(Collections.emptyList());
             return emptyResponse;
         }

@@ -1,6 +1,6 @@
 package com.example.maple.controller;
 
-import com.example.maple.dto.RankingResponse;
+import com.example.maple.dto.RankingOverallResponse;
 import com.example.maple.service.RankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ public class RankingController {
 
     @ResponseBody
     @GetMapping("/overall")
-    public RankingResponse getRankingOverall(@RequestParam String date) {
+    public RankingOverallResponse getRankingOverall(@RequestParam String date) {
         return overallRankingService.getRankingOverall(date);
     }
 }

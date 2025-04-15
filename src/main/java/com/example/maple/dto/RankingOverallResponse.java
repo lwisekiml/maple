@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter @Setter
-public class RankingResponse {
+public class RankingOverallResponse {
     private List<CharacterRanking> ranking;
 }
 
