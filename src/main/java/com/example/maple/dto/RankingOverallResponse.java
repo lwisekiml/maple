@@ -15,25 +15,26 @@ public class RankingOverallResponse {
 class CharacterRanking {
 
     private String date;
-    private int ranking;
-
-    @JsonProperty("character_name")
-    private String characterName;
 
     @JsonProperty("world_name")
     private String worldName;
 
-    @JsonProperty("class_name")
-    private String className;
+    private int ranking;
 
-    @JsonProperty("sub_class_name")
-    private String subClassName;
+    @JsonProperty("character_name")
+    private String characterName;
 
     @JsonProperty("character_level")
     private int characterLevel;
 
     @JsonProperty("character_exp")
     private long characterExp;
+
+    @JsonProperty("class_name")
+    private String className;
+
+    @JsonProperty("sub_class_name")
+    private String subClassName;
 
     @JsonProperty("character_popularity")
     private int characterPopularity;
