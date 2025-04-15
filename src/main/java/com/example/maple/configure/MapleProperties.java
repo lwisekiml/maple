@@ -12,4 +12,5 @@ public class MapleProperties {
 
     private String apikey;
     private String ranking;
+    private String id;
 }

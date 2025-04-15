@@ -5,5 +5,6 @@ spring:
 nexon:
   maple:
     apikey: ${API_KEY}
+    id: https://open.api.nexon.com/maplestory/v1/id
     ranking: https://open.api.nexon.com/maplestory/v1/ranking
 
