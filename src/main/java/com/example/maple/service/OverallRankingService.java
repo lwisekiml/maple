@@ -1,15 +1,11 @@
 package com.example.maple.service;
 
+import com.example.maple.configure.MapleProperties;
 import com.example.maple.domain.RankingResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.net.URLEncoder;
 
 @Service
 public class OverallRankingService {
@@ -26,12 +22,11 @@ public class OverallRankingService {
     // 그래서 파라미터로 넣어줌
     @Autowired
     public OverallRankingService(WebClient.Builder webClientBuilder,
-                                 @Value("${nexon.maple.apikey}") String API_KEY,
-                                 @Value("${nexon.maple.ranking}") String rankingUrl
+                                 MapleProperties props
     ) {
         this.webClient = webClientBuilder
-                .baseUrl(rankingUrl)
-                .defaultHeader("x-nxopen-api-key", API_KEY)
+                .baseUrl(props.getRanking())
+                .defaultHeader("x-nxopen-api-key", props.getApikey())
                 .build();
     }
 
@@ -78,7 +73,7 @@ public class OverallRankingService {
                     .bodyToMono(RankingResponse.class)
                     .block();
 
-            System.out.println("응답 결과 : " + response);
+            System.out.println("응답 결과 : " + response.getRanking().get(1).getCharacterName());
         } catch (Exception e) {
             e.printStackTrace();
         }
