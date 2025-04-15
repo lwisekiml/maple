@@ -2,4 +2,8 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
+nexon:
+  maple:
+    apikey: ${API_KEY}
+    ranking: https://open.api.nexon.com/maplestory/v1/ranking
 
