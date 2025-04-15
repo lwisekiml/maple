@@ -18,6 +18,6 @@ public class RankingController {
     @ResponseBody
     @GetMapping("/overall")
     public RankingResponse getRankingOverall(@RequestParam String date) {
-        return overallRankingService.getRanking(date);
+        return overallRankingService.getRankingOverall(date);
     }
 }

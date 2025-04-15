@@ -24,7 +24,7 @@ public class RankingService {
                 .build();
     }
 
-    public RankingResponse getRanking(String date) {
+    public RankingResponse getRankingOverall(String date) {
         try {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder
