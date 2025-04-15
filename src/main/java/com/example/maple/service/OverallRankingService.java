@@ -7,19 +7,13 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Collections;
+
 @Service
 public class OverallRankingService {
 
     private final WebClient webClient;
 
-//    @Value("${nexon.maple.apikey}")
-//    private String API_KEY;
-//
-//    @Value("${nexon.maple.ranking}")
-//    private String rankingUrl;
-
-    // @Value값이 생성자 기반 주입후에 실행되어 API_KEY, rankingUrl 값이 없다.
-    // 그래서 파라미터로 넣어줌
     @Autowired
     public OverallRankingService(WebClient.Builder webClientBuilder,
                                  MapleProperties props
@@ -30,31 +24,9 @@ public class OverallRankingService {
                 .build();
     }
 
-    public void getRanking(String date) {
-//        try {
-//            WebClient webClient = WebClient.builder()
-//                    .baseUrl("https://open.api.nexon.com/maplestory/v1/ranking")
-//                    .defaultHeader("x-nxopen-api-key", API_KEY)
-//                    .build();
-//
-//            RankingResponse response = webClient.get()
-//                    .uri(uriBuilder -> uriBuilder
-//                            .path("/overall")
-//                            .queryParam("date", "2025-03-01")
-//                            .build())
-//                    .retrieve()
-//                    .bodyToMono(RankingResponse.class)
-//                    .block();
-//
-//            // Subscribe or block to get the result
-//            System.out.println(response);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-
+    public RankingResponse getRanking(String date) {
         try {
-            RankingResponse response = webClient.get()
+            return webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/overall")
                             .queryParam("date", date)
@@ -73,9 +45,16 @@ public class OverallRankingService {
                     .bodyToMono(RankingResponse.class)
                     .block();
 
-            System.out.println("응답 결과 : " + response.getRanking().get(1).getCharacterName());
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.writeValueAsString(response);
         } catch (Exception e) {
             e.printStackTrace();
+
+            // 항상 RankingResponse 객체를 반환하므로 Controller에서 JSON 변환도 자연스럽게 처리된다.
+            // Postman에서 테스트 시에도 항상 일관된 응답 구조를 얻을 수 있다.
+            RankingResponse emptyResponse = new RankingResponse();
+            emptyResponse.setRanking(Collections.emptyList());
+            return emptyResponse;
         }
     }
 }
