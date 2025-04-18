@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OcidServiceTest {
@@ -30,9 +30,19 @@ class OcidServiceTest {
         response2.setOcid("ocid2");
         response3.setOcid("ocid3");
 
-        when(ocidService.getOcid("나이트로드")).thenReturn(response1);
-        when(ocidService.getOcid("나이트워커")).thenReturn(response2);
-        when(ocidService.getOcid("다크나이트")).thenReturn(response3);
+        /*
+        @Spy 객체에서 webClient == null  -->  doReturn() 사용해서 실제 메서드 실행 막기
+        when(...).thenReturn(...)       -->  getOcid()가 실행되어 NPE 발생 위험 있음
+        테스트 전용 기본 생성자 사용        -->  doReturn().when(...) 조합으로 mocking 해야 안전
+         */
+        /*
+        when().thenReturn()   -->   실제 메서드를 먼저 호출하려고 함 (Spy에서는 위험)
+        doReturn().when()     -->   실제 메서드 실행 없이 결과만 지정해서 안전
+        Spy 객체에는 반드시 doReturn() / doThrow() 사용
+         */
+        doReturn(response1).when(ocidService).getOcid("나이트로드");
+        doReturn(response2).when(ocidService).getOcid("나이트워커");
+        doReturn(response3).when(ocidService).getOcid("다크나이트");
 
         // when
         List<OcidResponse> result = ocidService.getOcidList(characterNames);
@@ -55,9 +65,9 @@ class OcidServiceTest {
         response1.setOcid("ocid1");
         response2.setOcid("ocid2");
 
-        when(ocidService.getOcid("나이트로드")).thenReturn(response1);
-        when(ocidService.getOcid("나이트워커")).thenReturn(response2);
-        when(ocidService.getOcid("에러남")).thenThrow(new RuntimeException("API 에러"));
+        doReturn(response1).when(ocidService).getOcid("나이트로드");
+        doReturn(response2).when(ocidService).getOcid("나이트워커");
+        doThrow(new RuntimeException("API 에러")).when(ocidService).getOcid("에러남");
 
         // When
         List<OcidResponse> result = ocidService.getOcidList(characterNames);
