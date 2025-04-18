@@ -18,29 +18,3 @@ public class UnionChampionResponse {
     @JsonProperty("champion_badge_total_info")
     private List<ChampionBadgeInfo> championBadgeTotalInfo;
 }
-
-@Getter
-@Setter
-class UnionChampion {
-
-    @JsonProperty("champion_name")
-    private String championName;
-
-    @JsonProperty("champion_slot")
-    private int championSlot;
-
-    @JsonProperty("champion_grade")
-    private String championGrade;
-
-    @JsonProperty("champion_class")
-    private String championClass;
-
-    @JsonProperty("champion_badge_info")
-    private List<ChampionBadgeInfo> championBadgeInfo;
-}
-
-@Getter
-@Setter
-class ChampionBadgeInfo {
-    private String stat;
-}
