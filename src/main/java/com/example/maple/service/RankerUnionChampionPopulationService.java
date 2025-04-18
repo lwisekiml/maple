@@ -39,7 +39,7 @@ public class RankerUnionChampionPopulationService {
                 .map(CharacterRanking::getCharacterName)
                 .toList();
 
-        List<OcidResponse> ocidList = getOcidListWithRateLimit(characterNames);
+        List<OcidResponse> ocidList = ocidService.getOcidList(characterNames);
 
         for (OcidResponse ocid : ocidList) {
             System.out.println("ocid: " + ocid.getOcid());
@@ -81,25 +81,5 @@ public class RankerUnionChampionPopulationService {
 
         System.out.println(top5List);
 //        System.out.println(top5Map);
-    }
-
-    public List<OcidResponse> getOcidListWithRateLimit(List<String> characterNames) {
-        RateLimiter rateLimiter = RateLimiter.create(3); // 초당 3회 제한
-
-        List<OcidResponse> ocidList = characterNames.stream()
-                .limit(10) // 10개 제한
-                .map(name -> {
-                    rateLimiter.acquire();
-                    try {
-                        log.debug("OCID 요청 중 : {}", name);
-                        return Optional.of(ocidService.getOcid(name));
-                    } catch (Exception e) {
-                        log.warn("OCID 요청 실패 : {}", name, e);
-                        return Optional.<OcidResponse>empty();
-                    }
-                })
-                .flatMap(Optional::stream) // Optional -> 실제 값으로 변환
-                .toList();
-        return ocidList;
     }
 }
