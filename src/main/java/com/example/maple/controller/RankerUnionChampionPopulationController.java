@@ -27,6 +27,6 @@ public class RankerUnionChampionPopulationController {
     @ResponseBody
     @GetMapping
     public void rankerUnionChampionPopulation(@RequestParam String date) throws InterruptedException {
-        rankerUnionChampionPopulationService.rankerUnionChampionPopulation(date);
+        rankerUnionChampionPopulationService.analyzeUnionChampionPopulation(date);
     }
 }

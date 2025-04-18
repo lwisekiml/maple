@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,34 +33,27 @@ public class RankerUnionChampionPopulationService {
 
     @ResponseBody
     @GetMapping
-    public void rankerUnionChampionPopulation(@RequestParam String date) throws InterruptedException {
+    public void analyzeUnionChampionPopulation(@RequestParam String date) throws InterruptedException {
         RankingOverallResponse rankingOverall = rankingService.getRankingOverall(date);
         List<String> characterNames = rankingOverall.getRanking().stream()
                 .map(CharacterRanking::getCharacterName)
                 .toList();
 
-        List<OcidResponse> ocidList = new ArrayList<>();
-
         RateLimiter rateLimiter = RateLimiter.create(3); // 초당 3회 제한
-//        for (String name : characterNames) {
-        for (int i=0; i < 10; i++) {
-            String name = characterNames.get(i);
 
-            rateLimiter.acquire();
-            System.out.println("name : " + name);
-
-            OcidResponse ocid = ocidService.getOcid(name);
-            ocidList.add(ocid);
-
-        }
+        List<OcidResponse> ocidList = characterNames.stream()
+                .limit(10) // 10개 제한
+                .map(name -> {
+                    rateLimiter.acquire();
+                    return ocidService.getOcid(name);
+                })
+                .toList();
 
         for (OcidResponse ocid : ocidList) {
             System.out.println("ocid: " + ocid.getOcid());
         }
 
-        List<String> championClassList = new ArrayList<>();
         List<UnionChampionResponse> UCRList = new ArrayList<>();
-
         for(OcidResponse ocid : ocidList) {
 //            rateLimiter.acquire(); // 적용 안됨...
             Thread.sleep(300);
@@ -68,6 +62,7 @@ public class RankerUnionChampionPopulationService {
             UCRList.add(unionChampion);
         }
 
+        List<String> championClassList = new ArrayList<>();
         for (UnionChampionResponse ucr : UCRList) {
             for (UnionChampion uc : ucr.getUnionChampion()) {
                 championClassList.add(uc.getChampionClass());
@@ -75,16 +70,24 @@ public class RankerUnionChampionPopulationService {
         }
 
         Map<String, Integer> jobCountMap = new HashMap<>();
-
         for (String job : championClassList) {
             jobCountMap.put(job, jobCountMap.getOrDefault(job, 0) + 1);
         }
 
-        List<Map.Entry<String, Integer>> sortedList = new ArrayList<>(jobCountMap.entrySet());
-        sortedList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue())); // 내림 차순
+        List<Map.Entry<String, Integer>> top5List = jobCountMap.entrySet().stream()
+//        Map<String, Integer> top5Map = jobCountMap.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed()) // comparingByValue() : 오름차순
+                .limit(5)
+//                .forEach(entry -> System.out.println(entry.getKey() + ": " + entry.getValue() + "개"))
+                .toList();
+//                .collect(Collectors.toMap(
+//                        Map.Entry::getKey,
+//                Map.Entry::getValue,
+//                (e1, e2) -> e1,
+//                LinkedHashMap::new
+//        ));
 
-        for (Map.Entry<String, Integer> entry : sortedList) {
-            System.out.println(entry.getKey() + ": " + entry.getValue() + "개");
-        }
+        System.out.println(top5List);
+//        System.out.println(top5Map);
     }
 }
