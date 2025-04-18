@@ -3,8 +3,7 @@ package com.example.maple.service;
 import com.example.maple.dto.OcidResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -13,16 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RankerUnionChampionPopulationServiceTest {
+class OcidServiceTest {
 
-    @Mock
+    @Spy
     private OcidService ocidService;
 
-    @InjectMocks
-    private RankerUnionChampionPopulationService rankerUnionChampionPopulationService;
-
     @Test
-    void getOcidListWithRateLimit_shouldReturnValidResponse() {
+    void getOcidList_shouldReturnValidResponse() {
         // given
         List<String> characterNames = List.of("나이트로드", "나이트워커", "다크나이트");
 
@@ -39,7 +35,7 @@ class RankerUnionChampionPopulationServiceTest {
         when(ocidService.getOcid("다크나이트")).thenReturn(response3);
 
         // when
-        List<OcidResponse> result = rankerUnionChampionPopulationService.getOcidListWithRateLimit(characterNames);
+        List<OcidResponse> result = ocidService.getOcidList(characterNames);
 
         // then
         assertEquals(3, result.size());
@@ -64,7 +60,7 @@ class RankerUnionChampionPopulationServiceTest {
         when(ocidService.getOcid("에러남")).thenThrow(new RuntimeException("API 에러"));
 
         // When
-        List<OcidResponse> result = rankerUnionChampionPopulationService.getOcidListWithRateLimit(characterNames);
+        List<OcidResponse> result = ocidService.getOcidList(characterNames);
 
         // Then
         assertEquals(2, result.size());
