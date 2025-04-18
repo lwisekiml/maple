@@ -45,8 +45,15 @@ public class RankerUnionChampionPopulationService {
                 .limit(10) // 10개 제한
                 .map(name -> {
                     rateLimiter.acquire();
-                    return ocidService.getOcid(name);
+                    try {
+                        log.debug("OCID 요청 중 : {}", name);
+                        return Optional.of(ocidService.getOcid(name));
+                    } catch (Exception e) {
+                        log.warn("OCID 요청 실패 : {}", name, e);
+                        return Optional.<OcidResponse>empty();
+                    }
                 })
+                .flatMap(Optional::stream) // Optional -> 실제 값으로 변환
                 .toList();
 
         for (OcidResponse ocid : ocidList) {
